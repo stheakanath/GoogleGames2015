@@ -1,34 +1,16 @@
-import math
+f = open('ships', 'r')
 
-cords = []
-with open("ships") as f:
-    cords = f.readlines()
-cords = [[float(y) for y in x.strip('\n').split()] for x in cords] 
+coordinates = [[float(x) for x in line.split()] for line in f]
 
-def hitmore(shipcord1, shipcord2, exploded):
-	distance = math.sqrt((shipcord1[0]-shipcord2[0]) ** 2 + (shipcord1[1] - shipcord2[1]) ** 2 + (shipcord1[2] - shipcord2[2]) ** 2)
-	if shipcord2 in exploded or distance > 100:
-		return 0
-	else:
-		return 1 + max(hitmore(shipcord2, [x for x in exploded], exploded.append(shipcord2)))
+def findDistance(p1, p2):
+	return ((p1[0] - p2[0])**2 + (p1[1] - p2[1])**2 + (p1[2] - p2[2])**2)**0.5
 
-max_num = 0
-for elem in cords:
-	exploded = [elem]
-	this_obj = 0
-	for check_others in cords:
-		if check_others not in exploded:
-			distance = math.sqrt((elem[0]-check_others[0]) ** 2 + (elem[1] - check_others[1]) ** 2 + (elem[2] - check_others[2]) ** 2)
-			if (distance <= 100):
-				this_obj += 1
-				exploded.append(check_others)
-				this_obj += hitmore(check_others, [x for x in cords], exploded)
-	if this_obj > max_num:
-		max_num = this_obj
-
-print(max_num)
-
-
-
-
-I U E Y H T W G Z S M F K R 
+maxCount = 0
+for i in range(len(coordinates)):
+	count = 0
+	for j in range(len(coordinates)):
+		if findDistance(coordinates[i], coordinates[j]) < 100:
+			count += 1
+	if count > maxCount:
+		maxCount = count
+print(maxCount)
